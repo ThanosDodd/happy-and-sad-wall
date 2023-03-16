@@ -13,3 +13,14 @@ h1 {
   text-align: center;
   border: solid;
 }
+
+.nameSBox {
+  display: flex;
+  flex-wrap: wrap;
+}
+.nameBox {
+  text-align: center;
+  border: solid;
+  padding: 9px;
+  cursor: pointer;
+}
