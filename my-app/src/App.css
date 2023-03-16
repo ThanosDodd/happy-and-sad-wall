@@ -1,0 +1,15 @@
+.App {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+h1 {
+  background-color: aquamarine;
+  margin: 0;
+}
+
+.happy,
+.sad {
+  text-align: center;
+  border: solid;
+}
