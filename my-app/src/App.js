@@ -4,51 +4,84 @@ import { useState, useEffect } from "react";
 
 function App() {
   // Add the students for the first time the data gets inserted to local storage
-  const studentsString =
-    "CocoH KellyH NovaH CindyH CandyH JoyeH JoyS NeilS ChrisH MikeS JimS GeorgeH JaydonH JonnyS NickS JimmyS EricH OliviaH AllenS KevinH HarryS MichelleH AchillesH JerryH";
+  let studentsArray = [
+    "CocoH",
+    "KellyS",
+    "NovaH",
+    "CindyH",
+    "CandyH",
+    "JoyeH",
+    "JoyS",
+    "NeilS",
+    "ChrisH",
+    "MikeS",
+    "JimS",
+    "GeorgeH",
+    "JaydonH",
+    "JonnyS",
+    "NickS",
+    "JimmyS",
+    "EricH",
+    "OliviaH",
+    "AllenS",
+    "KevinH",
+    "HarryS",
+    "MichelleH",
+    "AchillesH",
+    "JerryH",
+  ];
 
   // Retrieve data
-  const studentInfo = localStorage.getItem("studentInfo");
-  if (studentInfo === null) {
+  if (localStorage.getItem("studentInfo") === null) {
     // The first time
-    localStorage.setItem("studentInfo", studentsString);
+    localStorage.setItem("studentInfo", JSON.stringify(studentsArray));
   }
+  const studentInfo = localStorage.getItem("studentInfo");
 
   const [happy, sethappy] = useState([]);
   const [sad, setsad] = useState([]);
 
   function doStuff() {
-    let happyLoad = [];
-    let sadLoad = [];
-    let studentArray = studentInfo.split(" ");
+    let studentArray = JSON.parse(studentInfo);
 
-    for (const el of studentArray) {
-      if (el.slice(-1) === "H") {
-        happyLoad.push(el);
-      } else {
-        sadLoad.push(el);
-      }
-    }
-
-    sethappy(happyLoad);
-    setsad(sadLoad);
+    sethappy(studentArray.filter((e) => e.slice(-1) === "H"));
+    setsad(studentArray.filter((e) => e.slice(-1) === "S"));
   }
 
   useEffect(() => {
     doStuff();
   }, []);
 
-  function changeNameLocation() {}
+  function changeNameLocation(e) {
+    let nameToChange = e.target.innerHTML;
+    if (nameToChange.slice(-1) === "H") {
+      sethappy(happy.filter((el) => el !== nameToChange));
+      setsad([...sad, nameToChange.replace(/.$/, "S")]);
+
+      const arr = happy.filter((el) => el !== nameToChange);
+      const arrT = sad.concat([nameToChange.replace(/.$/, "S")]);
+
+      localStorage.setItem("studentInfo", JSON.stringify(arr.concat(arrT)));
+    } else {
+      setsad((els) => els.filter((el) => el !== nameToChange));
+      sethappy([...happy, nameToChange.replace(/.$/, "H")]);
+
+      const arr = sad.filter((el) => el !== nameToChange);
+      const arrT = happy.concat([nameToChange.replace(/.$/, "H")]);
+
+      localStorage.setItem("studentInfo", JSON.stringify(arr.concat(arrT)));
+    }
+  }
 
   return (
     <div className="App">
       <div className="happy">
         <h1>🙂</h1>
 
-        <div className="nameSBox" onClick={changeNameLocation()}>
+        <div className="nameSBox">
           {happy.map((el) => {
             return (
-              <div className="nameBox" key={el}>
+              <div className="nameBox" key={el} onClick={changeNameLocation}>
                 {el}
               </div>
             );
@@ -58,10 +91,10 @@ function App() {
       <div className="sad">
         <h1>😐</h1>
 
-        <div className="nameSBox" onClick={changeNameLocation()}>
+        <div className="nameSBox">
           {sad.map((el) => {
             return (
-              <div className="nameBox" key={el}>
+              <div className="nameBox" key={el} onClick={changeNameLocation}>
                 {el}
               </div>
             );
